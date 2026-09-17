@@ -1,6 +1,8 @@
 # Developer notes
 
-## Local run
+## Run from source
+
+Requires Node 20+, Rust (`rustup`), and macOS for a real `.app` bundle. Linux can still run the UI shell for development.
 
 ```bash
 npm install
@@ -8,7 +10,7 @@ cd apps/desktop
 npm run tauri dev
 ```
 
-## Build
+## Release build
 
 ```bash
 cd apps/desktop

@@ -2,7 +2,13 @@
 
 Daily job matches on your Mac. Install the app, answer a few questions (or paste a resume), press **Turn on Career Loop**, and get a morning digest in a folder on your computer — plus a notification so you know it ran.
 
-## Install (when a release build exists)
+You never write YAML or config files.
+
+## Install
+
+> **Mac download is not published yet.** There is no signed app on GitHub Releases, so the default path — download Career Loop, open it, and press **Turn on Career Loop** — is blocked until that Release exists. Check back here for a download link. You do not need Terminal, Homebrew, or developer tools while you wait.
+
+When a signed Release is published:
 
 1. Download the Mac app from Releases.
 2. Open it (allow it in System Settings if macOS asks).
@@ -11,23 +17,6 @@ Daily job matches on your Mac. Install the app, answer a few questions (or paste
 5. Press **Turn on Career Loop**.
 
 You do not need Terminal, Homebrew, or any cloud “API key” accounts for the default path.
-
-## Run from source (developers)
-
-```bash
-cd apps/desktop
-npm install
-npm run tauri dev
-```
-
-Release build:
-
-```bash
-cd apps/desktop
-npm run tauri build
-```
-
-Requires Node 20+, Rust (rustup), and macOS for a real `.app` bundle. Linux can still run the UI shell for development.
 
 ## Where your data lives
 
@@ -48,3 +37,5 @@ Never under Documents, Desktop, or iCloud Drive.
 ## License
 
 MIT — see `LICENSE`.
+
+Working on Career Loop from source? See [docs/DEV.md](docs/DEV.md).
