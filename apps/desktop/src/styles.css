@@ -1,0 +1,90 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  line-height: 1.45;
+  --bg: #0f1419;
+  --card: #1a222c;
+  --text: #f2f5f8;
+  --muted: #9aa7b5;
+  --accent: #3dd68c;
+  --accent-text: #062416;
+  --border: #2a3542;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f4f7fb;
+    --card: #ffffff;
+    --text: #142033;
+    --muted: #5b6b7c;
+    --accent: #0f9f6e;
+    --accent-text: #ffffff;
+    --border: #d7e0ea;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 10% -10%, #1d3b2f55, transparent), var(--bg);
+  color: var(--text);
+}
+main {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+h1 { font-size: 1.75rem; margin: 0 0 0.35rem; }
+.lede { color: var(--muted); margin-bottom: 1.5rem; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.15rem 1.2rem;
+  margin-bottom: 1rem;
+}
+label { display: block; font-size: 0.9rem; margin: 0.75rem 0 0.3rem; }
+input, textarea, select {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+}
+textarea { min-height: 8rem; resize: vertical; }
+.row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.row > * { flex: 1 1 10rem; }
+button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.8rem 1.2rem;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+button.primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  width: 100%;
+  margin-top: 1rem;
+}
+button.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+.tabs button.active { background: var(--accent); color: var(--accent-text); border-color: transparent; }
+.status {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #14322555;
+  border: 1px solid #2f6b4f66;
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+}
+.summary { color: var(--muted); font-size: 0.95rem; }
+.error { border-color: #a33; background: #3a151555; }

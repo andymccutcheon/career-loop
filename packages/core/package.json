@@ -1,0 +1,19 @@
+{
+  "name": "@career-loop/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./onboarding": "./src/onboarding.mjs",
+    "./paths": "./src/paths.mjs",
+    "./scan": "./src/scan.mjs",
+    "./digest": "./src/digest.mjs",
+    "./schedule": "./src/schedule.mjs",
+    "./loop": "./src/loop.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "license": "MIT"
+}

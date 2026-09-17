@@ -1,0 +1,19 @@
+{
+  "name": "career-loop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Career Loop — daily job-search heartbeat",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run tauri --workspace=career-loop-desktop -- dev",
+    "build": "npm run tauri --workspace=career-loop-desktop -- build",
+    "test": "npm run test --workspace=@career-loop/core"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
