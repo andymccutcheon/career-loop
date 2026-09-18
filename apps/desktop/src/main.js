@@ -3,12 +3,23 @@ import {
   proposeFromAnswers,
   proposeFromResume,
   confirmPortals,
-} from '@career-loop/core/onboarding.mjs';
+  turnOnCareerLoop,
+} from './desktop-api.js';
 
 const app = document.querySelector('#app');
 
 const state = {
   mode: 'answers',
+  answers: {
+    location: '',
+    remote: 'remote',
+    seniority: '',
+    functions: '',
+    companies: '',
+  },
+  resumeText: '',
+  keywordEdit: '',
+  locationEdit: '',
   proposal: null,
   portals: null,
   busy: false,
@@ -20,20 +31,6 @@ function el(html) {
   const t = document.createElement('template');
   t.innerHTML = html.trim();
   return t.content.firstElementChild;
-}
-
-async function invokeTurnOn(portals) {
-  try {
-    const { invoke } = await import('@tauri-apps/api/core');
-    return await invoke('turn_on_career_loop', { portals });
-  } catch {
-    const { turnOnCareerLoop } = await import('@career-loop/core/loop.mjs');
-    return await turnOnCareerLoop({
-      portals,
-      skipSchedule: true,
-      scheduleDryRun: true,
-    });
-  }
 }
 
 function render() {
@@ -63,21 +60,38 @@ function render() {
   if (state.mode === 'resume') {
     onboarding.appendChild(el(`<div>
       <label for="resume">Resume text</label>
-      <textarea id="resume" placeholder="Paste your resume here"></textarea>
-      <button class="primary" id="propose">Review search plan</button>
+      <textarea id="resume" placeholder="Paste your resume here">${escapeHtml(state.resumeText)}</textarea>
+      <button class="primary" id="propose"${state.busy ? ' disabled' : ''}>Review search plan</button>
     </div>`));
-    onboarding.querySelector('#propose').onclick = () => {
-      const resumeText = onboarding.querySelector('#resume').value;
-      state.proposal = proposeFromResume(resumeText);
-      state.portals = null;
+    onboarding.querySelector('#resume').oninput = (e) => {
+      state.resumeText = e.target.value;
+    };
+    onboarding.querySelector('#propose').onclick = async () => {
+      state.resumeText = onboarding.querySelector('#resume').value;
+      state.busy = true;
       state.error = '';
+      state.message = 'Building your search plan…';
       render();
+      try {
+        state.proposal = await proposeFromResume(state.resumeText);
+        const fields = state.proposal.fields || {};
+        state.keywordEdit = (fields.functions || []).join(', ');
+        state.locationEdit = fields.location || '';
+        state.portals = null;
+        state.message = '';
+      } catch (err) {
+        state.error = String(err?.message || err);
+        state.message = '';
+      } finally {
+        state.busy = false;
+        render();
+      }
     };
   } else {
     onboarding.appendChild(el(`<div>
       <div class="row">
         <div><label for="location">Where do you want to work?</label>
-        <input id="location" placeholder="Boise, ID" /></div>
+        <input id="location" placeholder="Boise, ID" value="${escapeHtml(state.answers.location)}" /></div>
         <div><label for="remote">Remote, hybrid, or on-site?</label>
         <select id="remote">
           <option value="remote">Remote</option>
@@ -88,25 +102,49 @@ function render() {
       </div>
       <div class="row">
         <div><label for="seniority">Seniority</label>
-        <input id="seniority" placeholder="Senior, mid, ..." /></div>
+        <input id="seniority" placeholder="Senior, mid, ..." value="${escapeHtml(state.answers.seniority)}" /></div>
         <div><label for="functions">What kind of roles?</label>
-        <input id="functions" placeholder="product marketing, design, ..." /></div>
+        <input id="functions" placeholder="product marketing, design, ..." value="${escapeHtml(state.answers.functions)}" /></div>
       </div>
       <label for="companies">Companies you care about (optional)</label>
-      <input id="companies" placeholder="Acme, Globex" />
-      <button class="primary" id="propose">Review search plan</button>
+      <input id="companies" placeholder="Acme, Globex" value="${escapeHtml(state.answers.companies)}" />
+      <button class="primary" id="propose"${state.busy ? ' disabled' : ''}>Review search plan</button>
     </div>`));
-    onboarding.querySelector('#propose').onclick = () => {
-      state.proposal = proposeFromAnswers({
+    onboarding.querySelector('#remote').value = state.answers.remote || 'remote';
+    ['location', 'remote', 'seniority', 'functions', 'companies'].forEach((id) => {
+      onboarding.querySelector(`#${id}`).addEventListener('input', (e) => {
+        state.answers[id] = e.target.value;
+      });
+      onboarding.querySelector(`#${id}`).addEventListener('change', (e) => {
+        state.answers[id] = e.target.value;
+      });
+    });
+    onboarding.querySelector('#propose').onclick = async () => {
+      state.answers = {
         location: onboarding.querySelector('#location').value,
         remote: onboarding.querySelector('#remote').value,
         seniority: onboarding.querySelector('#seniority').value,
         functions: onboarding.querySelector('#functions').value,
         companies: onboarding.querySelector('#companies').value,
-      });
-      state.portals = null;
+      };
+      state.busy = true;
       state.error = '';
+      state.message = 'Building your search plan…';
       render();
+      try {
+        state.proposal = await proposeFromAnswers(state.answers);
+        const fields = state.proposal.fields || {};
+        state.keywordEdit = (fields.functions || []).join(', ');
+        state.locationEdit = fields.location || '';
+        state.portals = null;
+        state.message = '';
+      } catch (err) {
+        state.error = String(err?.message || err);
+        state.message = '';
+      } finally {
+        state.busy = false;
+        render();
+      }
     };
   }
 
@@ -114,31 +152,41 @@ function render() {
   if (state.proposal) {
     confirm.hidden = false;
     const fields = state.proposal.fields || {};
+    const kw = state.keywordEdit || (fields.functions || []).join(', ');
+    const loc = state.locationEdit || fields.location || '';
     confirm.appendChild(el(`<div>
       <h2 style="margin-top:0;font-size:1.1rem">Does this look right?</h2>
       <p class="summary">${escapeHtml(state.proposal.plainLanguageSummary || '')}</p>
       <label for="kw">Keywords</label>
-      <input id="kw" value="${escapeHtml((fields.functions || []).join(', '))}" />
+      <input id="kw" value="${escapeHtml(kw)}" />
       <label for="loc">Location note</label>
-      <input id="loc" value="${escapeHtml(fields.location || '')}" />
+      <input id="loc" value="${escapeHtml(loc)}" />
       <button class="primary" id="turnon"${state.busy ? ' disabled' : ''}>Turn on Career Loop</button>
     </div>`));
+    confirm.querySelector('#kw').oninput = (e) => {
+      state.keywordEdit = e.target.value;
+    };
+    confirm.querySelector('#loc').oninput = (e) => {
+      state.locationEdit = e.target.value;
+    };
     confirm.querySelector('#turnon').onclick = async () => {
+      const edits = {
+        fields: {
+          ...fields,
+          functions: confirm.querySelector('#kw').value,
+          location: confirm.querySelector('#loc').value,
+        },
+      };
+      state.keywordEdit = edits.fields.functions;
+      state.locationEdit = edits.fields.location;
       state.busy = true;
       state.error = '';
       state.message = 'Starting your first scan…';
       render();
       try {
-        const edits = {
-          fields: {
-            ...fields,
-            functions: confirm.querySelector('#kw').value,
-            location: confirm.querySelector('#loc').value,
-          },
-        };
-        const portals = confirmPortals(state.proposal, edits);
+        const portals = await confirmPortals(state.proposal, edits);
         state.portals = portals;
-        const result = await invokeTurnOn(portals);
+        const result = await turnOnCareerLoop(portals);
         state.message = formatResult(result);
       } catch (err) {
         state.error = String(err?.message || err);
