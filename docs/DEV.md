@@ -19,6 +19,10 @@ npm run tauri build
 
 macOS needs Xcode CLT + Rust (`rustup`). Linux needs webkit2gtk / pkg-config (see Tauri docs).
 
+## UI / Node boundary
+
+`apps/desktop/src` is browser-only. It must not import `@career-loop/core` (or `node:fs` / `node:crypto` / `node:child_process`). The UI talks to Tauri `invoke` commands; Rust shells out to `packages/core/src/bridge.mjs`. Plain `vite` / `vite preview` uses local stub responses so the form still works.
+
 ## Core only (no GUI)
 
 ```bash

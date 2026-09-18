@@ -1,16 +1,10 @@
 import { defineConfig } from 'vite';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const root = path.dirname(fileURLToPath(import.meta.url));
+// Desktop UI must stay browser-only. Do not alias or bundle @career-loop/core —
+// Node scan/onboarding/digest/schedule run via Tauri → node packages/core/src/bridge.mjs.
 
 export default defineConfig({
   clearScreen: false,
-  resolve: {
-    alias: {
-      '@career-loop/core': path.resolve(root, '../../packages/core/src'),
-    },
-  },
   server: {
     port: 1420,
     strictPort: true,

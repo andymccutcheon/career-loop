@@ -10,7 +10,11 @@
     "./scan": "./src/scan.mjs",
     "./digest": "./src/digest.mjs",
     "./schedule": "./src/schedule.mjs",
-    "./loop": "./src/loop.mjs"
+    "./loop": "./src/loop.mjs",
+    "./bridge": "./src/bridge.mjs"
+  },
+  "bin": {
+    "career-loop-bridge": "./src/bridge.mjs"
   },
   "scripts": {
     "test": "node --test test/*.test.mjs"

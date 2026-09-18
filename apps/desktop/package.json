@@ -12,7 +12,6 @@
     "tauri:build": "tauri build"
   },
   "dependencies": {
-    "@career-loop/core": "*",
     "@tauri-apps/api": "^2.1.1",
     "@tauri-apps/plugin-shell": "^2.2.0"
   },
