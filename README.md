@@ -6,15 +6,16 @@ You never write YAML or config files.
 
 ## Install
 
-> **Mac download is not published yet.** There is no signed app on GitHub Releases, so the default path — download Career Loop, open it, and press **Turn on Career Loop** — is blocked until that Release exists. Check back here for a download link. You do not need Terminal, Homebrew, or developer tools while you wait.
+Download the Mac app from the [v0.1.0 Release](https://github.com/andymccutcheon/career-loop/releases/tag/v0.1.0). This first build is **Apple silicon only** (M1 and later — `aarch64`). There is no Intel Mac download yet.
 
-When a signed Release is published:
+The app is **unsigned and not notarized**, so macOS Gatekeeper may warn on first launch. That is expected. Use **right-click → Open** (do not rely on Terminal).
 
-1. Download the Mac app from Releases.
-2. Open it (allow it in System Settings if macOS asks).
-3. Paste a resume **or** answer five short questions.
-4. Confirm the search words and location.
-5. Press **Turn on Career Loop**.
+1. Download the `.dmg` (`Career.Loop_0.1.0_aarch64.dmg`).
+2. Open the disk image and drag **Career Loop** to Applications.
+3. First launch: in Finder, **right-click Career Loop → Open**, then confirm Open.
+4. Paste a resume **or** answer five short questions.
+5. Confirm the search words and location.
+6. Press **Turn on Career Loop**.
 
 You do not need Terminal, Homebrew, or any cloud “API key” accounts for the default path.
 
