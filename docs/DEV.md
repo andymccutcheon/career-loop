@@ -1,5 +1,17 @@
 # Developer notes
 
+## Unsigned Mac install (power users)
+
+The published v0.1.0 app is unsigned and not notarized. The stranger / first-launch path is **right-click → Open** in Finder — that belongs in README and Release notes, not a Terminal command.
+
+If you already double-clicked and macOS blocked the app, you can clear the quarantine flag after install:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/Career Loop.app"
+```
+
+Then open the app normally. A `.zip` build (`Career-Loop-0.1.0-macos-aarch64.zip`) is also on the [v0.1.0 Release](https://github.com/andymccutcheon/career-loop/releases/tag/v0.1.0) if you prefer not to use the `.dmg`.
+
 ## Run from source
 
 Requires Node 20+, Rust (`rustup`), and macOS for a real `.app` bundle. Linux can still run the UI shell for development.
